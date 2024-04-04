@@ -1,4 +1,5 @@
-import { useState, useEffect, ChangeEvent } from 'react';
+import { useState, useEffect } from 'react';
+import { useForm } from '../../hooks/useForm';
 import { SHORT_DELAY_IN_MS } from '../../constants/delays';
 import { Input } from '../ui/input/input';
 import { Button } from '../ui/button/button';
@@ -7,7 +8,7 @@ import { ArrowIcon } from '../ui/icons/arrow-icon';
 import { SolutionLayout } from '../ui/solution-layout/solution-layout';
 import { ElementStates } from '../../types/element-states';
 import { LinkedListTempElement } from '../../types/index';
-import { getArrWithElementStates, getRandomLinkedList } from './utils';
+import { delay, getArrWithElementStates, getRandomLinkedList } from './utils';
 import styles from './list-page.module.css';
 
 
@@ -27,8 +28,10 @@ export const ListPage = () => {
     getArrWithElementStates(linkedList.toArray())
   );
 
-  const [inputValue, setInputValue] = useState('');
-  const [inputIndex, setInputIndex] = useState('');
+  const { values, setValues, handleChange } = useForm({
+    char: '',
+    index: ''
+  });
 
   const [isLoaderAddToHeadBtn, setIsLoaderAddToHeadBtn] = useState(false);
   const [isDisabledAddToHeadBtn, setIsDisabledAddToHeadBtn] = useState(false);
@@ -52,8 +55,8 @@ export const ListPage = () => {
     const linkedListSize = linkedList.getSize();
 
     if (
-      (inputValue.length > 0) &&
-      (inputValue.length <= maxLenInput)
+      (values.char.length > 0) &&
+      (values.char.length <= maxLenInput)
     ) {
       setIsDisabledAddToHeadBtn(false);
       setIsDisabledAddToTailBtn(false);
@@ -74,11 +77,11 @@ export const ListPage = () => {
     }
 
     if (
-      (inputValue.length <= maxLenInput) &&
-      (inputValue.length > 0) &&
-      (inputIndex.length > 0) &&
-      (Number(inputIndex) < linkedListSize) &&
-      (Number(inputIndex) >= 0)
+      (values.char.length <= maxLenInput) &&
+      (values.char.length > 0) &&
+      (values.index.length > 0) &&
+      (Number(values.index) < linkedListSize) &&
+      (Number(values.index) >= 0)
     ) {
       setIsDisabledAddByIndexBtn(false);
     } else {
@@ -86,86 +89,74 @@ export const ListPage = () => {
     }
 
     if (
-      (inputIndex.length > 0) &&
-      (Number(inputIndex) < linkedListSize) &&
-      (Number(inputIndex) >= 0)
+      (values.index.length > 0) &&
+      (Number(values.index) < linkedListSize) &&
+      (Number(values.index) >= 0)
     ) {
       setIsDisabledDeleteByIndexBtn(false);
     } else {
       setIsDisabledDeleteByIndexBtn(true);
     }
-  }, [linkedList, inputValue, inputIndex, linkedListArr.length]);
+  }, [linkedList, values, linkedListArr.length]);
 
-  const changeInputValue = (evt: ChangeEvent<HTMLInputElement>) => {
-    setInputValue(evt.target.value);
-  }
-
-  const changeInputIndex = (evt: ChangeEvent<HTMLInputElement>) => {
-    setInputIndex(evt.target.value);
-  }
-
-  const addToHead = () => {
+  const addToHead = async () => {
     setIsLoaderAddToHeadBtn(true);
 
     let tempArr = getArrWithElementStates(linkedList.toArray());
 
     if (tempArr[0]) {
-      tempArr[0].headOrTailValue = inputValue;
+      tempArr[0].headOrTailValue = values.char;
       tempArr[0].hasHead = true;
     }
 
     setLinkedListArr([...tempArr]);
-    linkedList.prepend(inputValue);
+    linkedList.prepend(values.char);
 
-    setTimeout(() => {
-      tempArr = getArrWithElementStates(linkedList.toArray());
-      tempArr[0].state = ElementStates.Modified;
+    await delay(SHORT_DELAY_IN_MS);
+    tempArr = getArrWithElementStates(linkedList.toArray());
+    tempArr[0].state = ElementStates.Modified;
 
-      setLinkedListArr([...tempArr]);
+    setLinkedListArr([...tempArr]);
 
-      setTimeout(() => {
-        tempArr[0].state = ElementStates.Default;
-        setLinkedListArr([...tempArr]);
+    await delay(SHORT_DELAY_IN_MS);
+    tempArr[0].state = ElementStates.Default;
+    setLinkedListArr([...tempArr]);
 
-        setInputValue('');
-        setIsLoaderAddToHeadBtn(false);
-      }, SHORT_DELAY_IN_MS);
-    }, SHORT_DELAY_IN_MS);
+    setValues({ ...values, char: '' });
+    setIsLoaderAddToHeadBtn(false);
   }
 
-  const addToTail = () => {
+  const addToTail = async () => {
     setIsLoaderAddToTailBtn(true);
 
     let lastElement = linkedList.getSize() - 1;
     let tempArr = getArrWithElementStates(linkedList.toArray());
 
     if (tempArr[lastElement]) {
-      tempArr[lastElement].headOrTailValue = inputValue;
+      tempArr[lastElement].headOrTailValue = values.char;
       tempArr[lastElement].hasHead = true;
     }
 
     setLinkedListArr([...tempArr]);
 
-    setTimeout(() => {
-      linkedList.append(inputValue);
+    await delay(SHORT_DELAY_IN_MS);
+    linkedList.append(values.char);
 
-      tempArr = getArrWithElementStates(linkedList.toArray());
-      lastElement = linkedList.getSize() - 1;
+    tempArr = getArrWithElementStates(linkedList.toArray());
+    lastElement = linkedList.getSize() - 1;
 
-      tempArr[lastElement].state = ElementStates.Modified;
-      setLinkedListArr([...tempArr]);
+    tempArr[lastElement].state = ElementStates.Modified;
+    setLinkedListArr([...tempArr]);
 
-      setTimeout(() => {
-        tempArr[lastElement].state = ElementStates.Default;
-        setLinkedListArr([...tempArr]);
+    await delay(SHORT_DELAY_IN_MS);
+    tempArr[lastElement].state = ElementStates.Default;
+    setLinkedListArr([...tempArr]);
 
-        setInputValue('');
-        setIsLoaderAddToTailBtn(false);
-      }, SHORT_DELAY_IN_MS);
-    }, SHORT_DELAY_IN_MS);
+    setValues({ ...values, char: '' });
+    setIsLoaderAddToTailBtn(false);
   }
 
-  const deleteFromHead = () => {
+  const deleteFromHead = async () => {
     setIsLoaderDeleteFromHeadBtn(true);
 
     let tempArr = getArrWithElementStates(linkedList.toArray());
@@ -176,17 +167,16 @@ export const ListPage = () => {
 
     setLinkedListArr([...tempArr]);
 
-    setTimeout(() => {
-      linkedList.deleteHead();
+    await delay(SHORT_DELAY_IN_MS);
+    linkedList.deleteHead();
 
-      tempArr = getArrWithElementStates(linkedList.toArray());
-      setLinkedListArr([...tempArr]);
+    tempArr = getArrWithElementStates(linkedList.toArray());
+    setLinkedListArr([...tempArr]);
 
-      setIsLoaderDeleteFromHeadBtn(false);
-    }, SHORT_DELAY_IN_MS);
+    setIsLoaderDeleteFromHeadBtn(false);
   }
 
-  const deleteFromTail = () => {
+  const deleteFromTail = async () => {
     setIsLoaderDeleteFromTailBtn(true);
 
     let lastElement = linkedList.getSize() - 1;
@@ -198,97 +188,87 @@ export const ListPage = () => {
 
     setLinkedListArr([...tempArr]);
 
-    setTimeout(() => {
-      linkedList.deleteTail();
+    await delay(SHORT_DELAY_IN_MS);
+    linkedList.deleteTail();
 
-      tempArr = getArrWithElementStates(linkedList.toArray());
-      setLinkedListArr([...tempArr]);
+    tempArr = getArrWithElementStates(linkedList.toArray());
+    setLinkedListArr([...tempArr]);
 
-      setIsLoaderDeleteFromTailBtn(false);
-    }, SHORT_DELAY_IN_MS);
+    setIsLoaderDeleteFromTailBtn(false);
   }
 
-  const addByIndex = () => {
+  const addByIndex = async () => {
     setIsLoaderAddByIndexBtn(true);
 
     let tempArr = getArrWithElementStates(linkedList.toArray());
 
-    const position = Number(inputIndex);
+    const position = Number(values.index);
 
-    tempArr.forEach((elem, index) => {
-      setTimeout(() => {
-        if (index === position) {
-          linkedList.addByIndex(inputValue, Number(inputIndex));
+    for (let index = 0; index < tempArr.length; index++) {
+      if (index > position) return;
 
-          setTimeout(() => {
-            tempArr = getArrWithElementStates(linkedList.toArray());
+      await delay(SHORT_DELAY_IN_MS);
 
-            tempArr[position].state = ElementStates.Modified;
+      tempArr[index].headOrTailValue = values.char;
+      tempArr[index].hasHead = true;
 
-            setLinkedListArr([...tempArr]);
+      setLinkedListArr([...tempArr]);
 
-            setTimeout(() => {
-              tempArr = getArrWithElementStates(linkedList.toArray());
-              elem.state = ElementStates.Default;
+      tempArr[index].hasHead = false;
+      tempArr[index].state = ElementStates.Changing;
 
-              setLinkedListArr([...tempArr]);
+      if (index === position) {
+        linkedList.addByIndex(values.char, Number(values.index));
 
-              setInputValue('');
-              setInputIndex('');
-              setIsLoaderAddByIndexBtn(false);
-            }, SHORT_DELAY_IN_MS);
-          }, SHORT_DELAY_IN_MS);
-        }
-
-        if (index > position) return;
-
-        elem.headOrTailValue = inputValue;
-        elem.hasHead = true;
-
+        await delay(SHORT_DELAY_IN_MS);
+        tempArr = getArrWithElementStates(linkedList.toArray());
+        tempArr[position].state = ElementStates.Modified;
         setLinkedListArr([...tempArr]);
 
-        elem.hasHead = false;
-        elem.state = ElementStates.Changing;
-      }, SHORT_DELAY_IN_MS * index);
-    });
+        await delay(SHORT_DELAY_IN_MS);
+        tempArr = getArrWithElementStates(linkedList.toArray());
+        tempArr[index].state = ElementStates.Default;
+        setLinkedListArr([...tempArr]);
+
+        setValues({ ...values, char: '', index: '' });
+        setIsLoaderAddByIndexBtn(false);
+      }
+    }
   }
 
-  const deleteByIndex = () => {
+  const deleteByIndex = async () => {
     setIsLoaderDeleteByIndexBtn(true);
 
     let tempArr = getArrWithElementStates(linkedList.toArray());
 
-    const position = Number(inputIndex);
+    const position = Number(values.index);
 
-    tempArr.forEach((elem, index) => {
-      setTimeout(() => {
-        if (index === position) {
-          setTimeout(() => {
-            elem.state = ElementStates.Default;
-            elem.headOrTailValue = tempArr[position].value;
-            elem.hasTail = true;
-            elem.value = '';
+    for (let index = 0; index < tempArr.length; index++) {
+      if (index > position) return;
 
-            setLinkedListArr([...tempArr]);
+      await delay(SHORT_DELAY_IN_MS);
 
-            setTimeout(() => {
-              linkedList.deleteByIndex(position);
+      tempArr[index].state = ElementStates.Changing;
+      setLinkedListArr([...tempArr]);
 
-              tempArr = getArrWithElementStates(linkedList.toArray());
-              setLinkedListArr([...tempArr]);
-
-              setInputIndex('');
-              setIsLoaderDeleteByIndexBtn(false);
-            }, SHORT_DELAY_IN_MS);
-          }, SHORT_DELAY_IN_MS);
-        }
-
-        if (index > position) return;
-
-        elem.state = ElementStates.Changing;
+      if (index === position) {
+        await delay(SHORT_DELAY_IN_MS);
+        tempArr[index].state = ElementStates.Default;
+        tempArr[index].headOrTailValue = tempArr[position].value;
+        tempArr[index].hasTail = true;
+        tempArr[index].value = '';
         setLinkedListArr([...tempArr]);
-      }, SHORT_DELAY_IN_MS * index);
-    });
+
+        await delay(SHORT_DELAY_IN_MS);
+        linkedList.deleteByIndex(position);
+
+        tempArr = getArrWithElementStates(linkedList.toArray());
+        setLinkedListArr([...tempArr]);
+
+        setValues({ ...values, index: '' });
+        setIsLoaderDeleteByIndexBtn(false);
+      }
+    }
   }
 
   const getHeadValue = (elem: LinkedListTempElement, index: number) => {
@@ -325,12 +305,13 @@ export const ListPage = () => {
         <form className={styles.form} onSubmit={(evt) => evt.preventDefault()}>
           <fieldset className={styles.fieldset}>
             <Input
+              name='char'
               placeholder='Введите значение'
               type='text'
-              value={inputValue}
+              value={values.char}
               maxLength={maxLenInput}
               isLimitText={true}
-              onChange={changeInputValue}
+              onChange={handleChange}
               disabled={
                 isLoaderAddToHeadBtn ||
                 isLoaderAddToTailBtn ||
@@ -413,10 +394,11 @@ export const ListPage = () => {
 
           <fieldset className={styles.fieldset}>
             <Input
+              name='index'
               placeholder='Введите индекс'
               type='number'
-              value={inputIndex}
-              onChange={changeInputIndex}
+              value={values.index}
+              onChange={handleChange}
               disabled={
                 isLoaderAddToHeadBtn ||
                 isLoaderAddToTailBtn ||

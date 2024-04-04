@@ -1,10 +1,12 @@
-import { useState, ChangeEvent, FormEvent } from 'react';
+import { useState, useEffect, FormEvent } from 'react';
+import { useForm } from '../../hooks/useForm';
 import { SHORT_DELAY_IN_MS } from '../../constants/delays';
 import { Input } from '../ui/input/input';
 import { Button } from '../ui/button/button';
 import { Circle } from '../ui/circle/circle';
 import { SolutionLayout } from '../ui/solution-layout/solution-layout';
 import { getFibonacciNumbers } from './getFibonacciNumbers';
+import { delay } from '../string/utils';
 import styles from './fibonacci-page.module.css';
 
 
@@ -14,23 +16,24 @@ export const FibonacciPage = () => {
 
   const [steps, setSteps] = useState<number[]>([]);
 
-  const [inputValue, setInputValue] = useState('');
+  const { values, handleChange } = useForm({
+    count: ''
+  });
+
   const [isValid, setIsValid] = useState(false);
   const [isLoader, setIsLoader] = useState(false);
 
-  const onChange = (evt: ChangeEvent<HTMLInputElement>) => {
-    const currentValue = Number(evt.target.value);
+  useEffect(() => {
+    const currentInputCount = Number(values.count);
 
-    setInputValue(evt.target.value);
-
-    if (currentValue >= minNum && currentValue <= maxNum) {
+    if (currentInputCount >= minNum && currentInputCount <= maxNum) {
       setIsValid(true);
     } else {
       setIsValid(false);
     }
-  }
+  }, [values]);
 
-  const onSubmit = (evt: FormEvent) => {
+  const handleSubmit = (evt: FormEvent) => {
     evt.preventDefault();
 
     setIsLoader(true);
@@ -39,29 +42,31 @@ export const FibonacciPage = () => {
     startAlgorithm();
   }
 
-  const startAlgorithm = () => {
-    const sequenceLength = Number(inputValue);
+  const startAlgorithm = async () => {
+    const sequenceLength = Number(values.count);
     const fibonacciNumbers = getFibonacciNumbers(sequenceLength);
 
     for (let i = 0; i < fibonacciNumbers.length; i++) {
-      setTimeout(() => {
-        setSteps(prev => [...prev, fibonacciNumbers[i]]);
+      await delay(SHORT_DELAY_IN_MS);
 
-        i === fibonacciNumbers.length - 1 && setIsLoader(false);
-      }, i * SHORT_DELAY_IN_MS);
+      setSteps(prev => [...prev, fibonacciNumbers[i]]);
+
+      i === fibonacciNumbers.length - 1 && setIsLoader(false);
     }
   }
 
   return (
     <SolutionLayout title='Последовательность Фибоначчи'>
       <div className={styles.wrap}>
-        <form className={styles.form} onSubmit={onSubmit}>
+        <form className={styles.form} onSubmit={handleSubmit}>
           <Input
+            name='count'
             placeholder='Введите число'
             type='number'
+            value={values.count}
             max={maxNum}
             isLimitText={true}
-            onChange={onChange}
+            onChange={handleChange}
             disabled={isLoader}
           />
 

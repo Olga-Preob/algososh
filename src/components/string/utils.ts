@@ -1,6 +1,10 @@
 import { ElementStates } from '../../types/element-states';
 
 
+export const delay = (time: number = 0) => {
+  return new Promise((resolve) => setTimeout(resolve, time));
+}
+
 export const getCharStatus = (index: number, steps: string[][], currentStepIndex: number) => {
   const maxIndex = steps[currentStepIndex].length - 1;
 

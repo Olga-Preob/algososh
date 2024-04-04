@@ -5,7 +5,7 @@ import { Button } from '../ui/button/button';
 import { Column } from '../ui/column/column';
 import { SolutionLayout } from '../ui/solution-layout/solution-layout';
 import { Direction } from '../../types/direction';
-import { getRandomArr, getCharStatus } from './utils';
+import { delay, getRandomArr, getCharStatus } from './utils';
 import { selectionSortWithSteps } from './selectionSortWithSteps';
 import { bubbleSortWithSteps } from './bubbleSortWithSteps';
 import styles from './sorting-page.module.css';
@@ -46,7 +46,7 @@ export const SortingPage = () => {
     setSteps([getRandomArr(minLen, maxLen, minNum, maxNum)]);
   }
 
-  const onSubmit = (evt: FormEvent) => {
+  const handleSubmit = (evt: FormEvent) => {
     evt.preventDefault();
 
     const tempTypeOfSort = (document.querySelector('input[name="typeOfSort"]:checked') as HTMLInputElement).value;
@@ -69,7 +69,7 @@ export const SortingPage = () => {
     startAlgorithm();
   }
 
-  const startAlgorithm = () => {
+  const startAlgorithm = async () => {
     let newSteps: [number[], number, number][] = [];
 
     if (typeOfSortRef.current === 'selection') {
@@ -102,26 +102,22 @@ export const SortingPage = () => {
 
     let index = 0;
 
-    const intervald = setInterval(() => {
-      if (index >= newSteps.length - 1) {
-        clearInterval(intervald);
+    while (index < newSteps.length - 1) {
+      await delay(SHORT_DELAY_IN_MS);
 
-        setIsDisabled(false);
-        setIsLoaderASC(false);
-        setIsLoaderDESC(false);
+      index++;
+      setCurrentStepIndex(index);
+    }
 
-        return;
-      }
-
-      setCurrentStepIndex(++index);
-
-    }, SHORT_DELAY_IN_MS);
+    setIsDisabled(false);
+    setIsLoaderASC(false);
+    setIsLoaderDESC(false);
   }
 
   return (
     <SolutionLayout title='Сортировка массива'>
       <div className={styles.wrap}>
-        <form className={styles.form} onSubmit={onSubmit}>
+        <form className={styles.form} onSubmit={handleSubmit}>
           <fieldset className={styles.radioBtns}>
             <RadioInput
               name='typeOfSort'

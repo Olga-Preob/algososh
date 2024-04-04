@@ -2,6 +2,10 @@ import { ElementStates } from '../../types/element-states';
 import { LinkedList } from './LinkedList';
 
 
+export const delay = (time: number = 0) => {
+  return new Promise((resolve) => setTimeout(resolve, time));
+}
+
 export const getRandomLinkedList = (minLen: number, maxLen: number, minNum: number, maxNum: number) => {
   const newLinkedList = new LinkedList<string>();
   const randomLinkedListLength = Math.floor(Math.random() * (maxLen - minLen + 1)) + minLen;

@@ -1,11 +1,12 @@
-import { ChangeEvent, FormEvent, useState } from 'react';
+import { useState, useEffect, FormEvent } from 'react';
+import { useForm } from '../../hooks/useForm';
 import { DELAY_IN_MS } from '../../constants/delays';
 import { Input } from '../ui/input/input';
 import { Button } from '../ui/button/button';
 import { Circle } from '../ui/circle/circle';
 import { SolutionLayout } from '../ui/solution-layout/solution-layout';
 import { reverseStringWithSteps } from './reverseStringWithSteps';
-import { getCharStatus } from './utils';
+import { delay, getCharStatus } from './utils';
 import styles from './string.module.css';
 
 
@@ -15,31 +16,32 @@ export const StringComponent = () => {
   const [steps, setSteps] = useState<string[][] | null>(null);
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
 
-  const [inputValue, setInputValue] = useState('');
+  const { values, handleChange } = useForm({
+    string: ''
+  });
+
   const [isValid, setIsValid] = useState(false);
   const [isLoader, setIsLoader] = useState(false);
 
-  const onChange = (evt: ChangeEvent<HTMLInputElement>) => {
-    const inputValueLen = evt.target.value.length;
+  useEffect(() => {
+    const currentInputLen = values.string.length;
 
-    setInputValue(evt.target.value);
-
-    if (inputValueLen > 0 && inputValueLen <= maxLen) {
+    if (currentInputLen > 0 && currentInputLen <= maxLen) {
       setIsValid(true);
     } else {
       setIsValid(false);
     }
-  }
+  }, [values]);
 
-  const onSubmit = (evt: FormEvent) => {
+  const handleSubmit = (evt: FormEvent) => {
     evt.preventDefault();
 
     setIsLoader(true);
     startAlgorithm();
   }
 
-  const startAlgorithm = () => {
-    const newSteps = reverseStringWithSteps(inputValue);
+  const startAlgorithm = async () => {
+    const newSteps = reverseStringWithSteps(values.string);
 
     setSteps(newSteps);
     setCurrentStepIndex(0);
@@ -48,26 +50,26 @@ export const StringComponent = () => {
 
     let index = 0;
 
-    const intervald = setInterval(() => {
-      if (index >= newSteps.length - 1) {
-        clearInterval(intervald);
-        setIsLoader(false);
+    while (index < newSteps.length - 1) {
+      await delay(DELAY_IN_MS);
 
-        return;
-      }
+      index++;
+      setCurrentStepIndex(index);
+    }
 
-      setCurrentStepIndex(++index);
-    }, DELAY_IN_MS);
+    setIsLoader(false);
   }
 
   return (
     <SolutionLayout title='Строка'>
       <div className={styles.wrap}>
-        <form className={styles.form} onSubmit={onSubmit}>
+        <form className={styles.form} onSubmit={handleSubmit}>
           <Input
+            name='string'
+            value={values.string}
             maxLength={maxLen}
             isLimitText={true}
-            onChange={onChange}
+            onChange={handleChange}
             disabled={isLoader}
           />
 

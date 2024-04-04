@@ -1,4 +1,5 @@
-import { useState, useEffect, ChangeEvent } from 'react';
+import { useState, useEffect } from 'react';
+import { useForm } from '../../hooks/useForm';
 import { SHORT_DELAY_IN_MS } from '../../constants/delays';
 import { Input } from '../ui/input/input';
 import { Button } from '../ui/button/button';
@@ -6,6 +7,7 @@ import { Circle } from '../ui/circle/circle';
 import { SolutionLayout } from '../ui/solution-layout/solution-layout';
 import { ElementStates } from '../../types/element-states';
 import { Element } from '../../types/index';
+import { delay } from '../string/utils';
 import { Queue } from './Queue';
 import styles from './queue-page.module.css';
 
@@ -21,7 +23,9 @@ export const QueuePage = () => {
   const [queue] = useState(new Queue<Element>(queueSize));
   const [queueElemArr, setQueueElemArr] = useState<Element[]>(initArr);
 
-  const [inputValue, setInputValue] = useState('');
+  const { values, setValues, handleChange } = useForm({
+    char: ''
+  });
 
   const [IsLoaderAddBtn, setIsLoaderAddBtn] = useState(false);
   const [isDisabledAddBtn, setIsDisabledAddBtn] = useState(true);
@@ -31,6 +35,16 @@ export const QueuePage = () => {
 
   const [IsLoaderClearBtn, setIsLoaderClearBtn] = useState(false);
   const [isDisabledClearBtn, setIsDisabledClearBtn] = useState(true);
+
+  useEffect(() => {
+    const currentCharLen = values.char.length;
+
+    if ((currentCharLen > 0) && (currentCharLen <= maxLen)) {
+      setIsDisabledAddBtn(false);
+    } else {
+      setIsDisabledAddBtn(true);
+    }
+  }, [values]);
 
   useEffect(() => {
     const isEmpty = queue.isEmpty();
@@ -59,46 +73,34 @@ export const QueuePage = () => {
     });
   }
 
-  const onChange = (evt: ChangeEvent<HTMLInputElement>) => {
-    const curValueLen = evt.target.value.length;
-
-    setInputValue(evt.target.value);
-
-    if ((curValueLen > 0) && (curValueLen <= maxLen)) {
-      setIsDisabledAddBtn(false);
-    } else {
-      setIsDisabledAddBtn(true);
-    }
-  }
-
-  const addElem = () => {
+  const addElem = async () => {
     if (queue.getTail() >= queueSize) return;
 
     setIsLoaderAddBtn(true);
-    setInputValue('');
+    setValues({ ...values, char: '' });
 
     let tempArr = fillTempArr();
 
     tempArr[queue.getTail()].state = ElementStates.Changing;
     setQueueElemArr([...tempArr]);
 
-    setTimeout(() => {
-      queue.enqueue({
-        value: inputValue,
-        state: ElementStates.Default
-      });
+    await delay(SHORT_DELAY_IN_MS);
 
-      tempArr = fillTempArr();
+    queue.enqueue({
+      value: values.char,
+      state: ElementStates.Default
+    });
 
-      tempArr[queue.getTail() - 1].state = ElementStates.Default;
-      setQueueElemArr([...tempArr]);
+    tempArr = fillTempArr();
 
-      setIsLoaderAddBtn(false);
-      setIsDisabledAddBtn(true);
-    }, SHORT_DELAY_IN_MS);
+    tempArr[queue.getTail() - 1].state = ElementStates.Default;
+    setQueueElemArr([...tempArr]);
+
+    setIsLoaderAddBtn(false);
+    setIsDisabledAddBtn(true);
   }
 
-  const removeElem = () => {
+  const removeElem = async () => {
     if (
       (queue.getHead() >= queueSize) ||
       (queue.isEmpty())
@@ -111,28 +113,25 @@ export const QueuePage = () => {
     tempArr[queue.getHead()].state = ElementStates.Changing;
     setQueueElemArr([...tempArr]);
 
-    setTimeout(() => {
-      queue.dequeue();
+    await delay(SHORT_DELAY_IN_MS);
 
-      tempArr = fillTempArr();
+    queue.dequeue();
 
-      tempArr[queue.getTail() - 1].state = ElementStates.Default;
-      setQueueElemArr([...tempArr]);
+    tempArr = fillTempArr();
+    tempArr[queue.getTail() - 1].state = ElementStates.Default;
+    setQueueElemArr([...tempArr]);
 
-      setIsLoaderRemoveBtn(false);
-    }, SHORT_DELAY_IN_MS);
+    setIsLoaderRemoveBtn(false);
   }
 
-  const clearQueue = () => {
+  const clearQueue = async () => {
     setIsLoaderClearBtn(true);
 
     queue.clear();
-
     setQueueElemArr([...fillTempArr()]);
 
-    setTimeout(() => {
-      setIsLoaderClearBtn(false);
-    }, SHORT_DELAY_IN_MS);
+    await delay(SHORT_DELAY_IN_MS);
+    setIsLoaderClearBtn(false);
   }
 
   return (
@@ -141,12 +140,13 @@ export const QueuePage = () => {
         <form className={styles.form} onSubmit={(evt) => evt.preventDefault()}>
           <fieldset className={styles.fieldset}>
             <Input
+              name='char'
               placeholder='Введите значение'
               type='text'
-              value={inputValue}
+              value={values.char}
               maxLength={maxLen}
               isLimitText={true}
-              onChange={onChange}
+              onChange={handleChange}
               disabled={IsLoaderAddBtn}
               extraClass={styles.input}
             />

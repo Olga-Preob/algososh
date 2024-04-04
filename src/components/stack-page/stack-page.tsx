@@ -1,4 +1,5 @@
-import { useState, useEffect, ChangeEvent } from 'react';
+import { useState, useEffect } from 'react';
+import { useForm } from '../../hooks/useForm';
 import { SHORT_DELAY_IN_MS } from '../../constants/delays';
 import { Input } from '../ui/input/input';
 import { Button } from '../ui/button/button';
@@ -6,6 +7,7 @@ import { Circle } from '../ui/circle/circle';
 import { SolutionLayout } from '../ui/solution-layout/solution-layout';
 import { ElementStates } from '../../types/element-states';
 import { Element } from '../../types/index';
+import { delay } from './utils';
 import { Stack } from './Stack';
 import styles from './stack-page.module.css';
 
@@ -16,7 +18,9 @@ export const StackPage = () => {
   const [stack] = useState(new Stack<Element>());
   const [stackElemArr, setStackElemArr] = useState<Element[]>([]);
 
-  const [inputValue, setInputValue] = useState('');
+  const { values, setValues, handleChange } = useForm({
+    char: ''
+  });
 
   const [IsLoaderAddBtn, setIsLoaderAddBtn] = useState(false);
   const [isDisabledAddBtn, setIsDisabledAddBtn] = useState(true);
@@ -28,6 +32,16 @@ export const StackPage = () => {
   const [isDisabledClearBtn, setIsDisabledClearBtn] = useState(true);
 
   useEffect(() => {
+    const currentCharLen = values.char.length;
+
+    if ((currentCharLen > 0) && (currentCharLen <= maxLen)) {
+      setIsDisabledAddBtn(false);
+    } else {
+      setIsDisabledAddBtn(true);
+    }
+  }, [values]);
+
+  useEffect(() => {
     if (stackElemArr.length > 0) {
       setIsDisabledRemoveBtn(false);
       setIsDisabledClearBtn(false);
@@ -37,24 +51,12 @@ export const StackPage = () => {
     }
   }, [stackElemArr.length]);
 
-  const onChange = (evt: ChangeEvent<HTMLInputElement>) => {
-    const curValueLen = evt.target.value.length;
-
-    setInputValue(evt.target.value);
-
-    if ((curValueLen > 0) && (curValueLen <= maxLen)) {
-      setIsDisabledAddBtn(false);
-    } else {
-      setIsDisabledAddBtn(true);
-    }
-  }
-
-  const addElem = () => {
+  const addElem = async () => {
     setIsLoaderAddBtn(true);
-    setInputValue('');
+    setValues({ ...values, char: '' });
 
     stack.push({
-      value: inputValue,
+      value: values.char,
       state: ElementStates.Default
     });
 
@@ -63,16 +65,16 @@ export const StackPage = () => {
     tempArr[tempArr.length - 1].state = ElementStates.Changing;
     setStackElemArr([...tempArr]);
 
-    setTimeout(() => {
-      tempArr[tempArr.length - 1].state = ElementStates.Default;
-      setStackElemArr([...tempArr]);
+    await delay(SHORT_DELAY_IN_MS);
 
-      setIsLoaderAddBtn(false);
-      setIsDisabledAddBtn(true);
-    }, SHORT_DELAY_IN_MS);
+    tempArr[tempArr.length - 1].state = ElementStates.Default;
+    setStackElemArr([...tempArr]);
+
+    setIsLoaderAddBtn(false);
+    setIsDisabledAddBtn(true);
   }
 
-  const removeElem = () => {
+  const removeElem = async () => {
     setIsLoaderRemoveBtn(true);
 
     const tempArr = stack.getElements();
@@ -80,25 +82,23 @@ export const StackPage = () => {
     tempArr[tempArr.length - 1].state = ElementStates.Changing;
     setStackElemArr([...tempArr]);
 
-    setTimeout(() => {
-      stack.pop();
+    await delay(SHORT_DELAY_IN_MS);
 
-      setStackElemArr([...stack.getElements()]);
+    stack.pop();
+    setStackElemArr([...stack.getElements()]);
 
-      setIsLoaderRemoveBtn(false);
-    }, SHORT_DELAY_IN_MS);
+    setIsLoaderRemoveBtn(false);
   }
 
-  const clearStack = () => {
+  const clearStack = async () => {
     setIsLoaderClearBtn(true);
 
     stack.clear();
-
     setStackElemArr([...stack.getElements()]);
 
-    setTimeout(() => {
-      setIsLoaderClearBtn(false);
-    }, SHORT_DELAY_IN_MS);
+    await delay(SHORT_DELAY_IN_MS);
+
+    setIsLoaderClearBtn(false);
   }
 
   return (
@@ -107,12 +107,13 @@ export const StackPage = () => {
         <form className={styles.form} onSubmit={(evt) => evt.preventDefault()}>
           <fieldset className={styles.fieldset}>
             <Input
-              value={inputValue}
+              name='char'
               placeholder='Введите значение'
               type='text'
+              value={values.char}
               maxLength={maxLen}
               isLimitText={true}
-              onChange={onChange}
+              onChange={handleChange}
               disabled={IsLoaderAddBtn}
               extraClass={styles.input}
             />

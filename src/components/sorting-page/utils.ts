@@ -1,6 +1,10 @@
 import { ElementStates } from '../../types/element-states';
 
 
+export const delay = (time: number = 0) => {
+  return new Promise((resolve) => setTimeout(resolve, time));
+}
+
 export const swap = (arr: number[], firstIndex: number, secondIndex: number): void => {
   const temp = arr[firstIndex];
 
