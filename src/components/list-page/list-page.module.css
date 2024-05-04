@@ -1,0 +1,53 @@
+.wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 90px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 955px;
+  gap: 12px;
+}
+
+.fieldset {
+  display: flex;
+  border: none;
+  gap: 12px;
+  padding: 0;
+  margin: 0;
+}
+
+.input {
+  width: 100%;
+  max-width: 204px;
+}
+
+.smallBtn {
+  min-width: 175px;
+}
+
+.largeBtn {
+  min-width: 362px;
+}
+
+.list {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  width: 100%;
+  max-width: 955px;
+  gap: 80px 16px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.element {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}

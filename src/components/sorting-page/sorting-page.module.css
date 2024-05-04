@@ -1,0 +1,44 @@
+.wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 48px;
+}
+
+.form {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 980px;
+}
+
+.radioBtns {
+  display: flex;
+  gap: 40px;
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sortBtns {
+  display: flex;
+  gap: 12px;
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+.btn {
+  min-width: 205px;
+}
+
+.list {
+  display: flex;
+  align-items: flex-end;
+  min-height: 348px;
+  list-style: none;
+  gap: 10px;
+  padding: 0;
+  margin: 0;
+}
