@@ -2,8 +2,24 @@ import { ElementStates } from '../../types/element-states';
 import { LinkedList } from './LinkedList';
 
 
-export const delay = (time: number = 0) => {
-  return new Promise((resolve) => setTimeout(resolve, time));
+export const delay = (ms: number = 0, value: string | null, signal: AbortSignal) => {
+  return new Promise((resolve, reject) => {
+    const listener = () => {
+      clearTimeout(timer);
+
+      reject(new Error('Aborted'));
+    }
+
+    const timer = setTimeout(() => {
+      signal?.removeEventListener('abort', listener);
+
+      resolve(value);
+    }, ms);
+
+    if (signal?.aborted) listener();
+
+    signal?.addEventListener('abort', listener);
+  });
 }
 
 export const getRandomLinkedList = (minLen: number, maxLen: number, minNum: number, maxNum: number) => {

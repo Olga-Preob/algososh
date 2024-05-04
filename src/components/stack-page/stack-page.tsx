@@ -13,6 +13,9 @@ import styles from './stack-page.module.css';
 
 
 export const StackPage = () => {
+  const controller = new AbortController();
+  const signal = controller.signal;
+
   const maxLen = 4;
 
   const [stack] = useState(new Stack<Element>());
@@ -65,7 +68,7 @@ export const StackPage = () => {
     tempArr[tempArr.length - 1].state = ElementStates.Changing;
     setStackElemArr([...tempArr]);
 
-    await delay(SHORT_DELAY_IN_MS);
+    await delay(SHORT_DELAY_IN_MS, null, signal);
 
     tempArr[tempArr.length - 1].state = ElementStates.Default;
     setStackElemArr([...tempArr]);
@@ -82,7 +85,7 @@ export const StackPage = () => {
     tempArr[tempArr.length - 1].state = ElementStates.Changing;
     setStackElemArr([...tempArr]);
 
-    await delay(SHORT_DELAY_IN_MS);
+    await delay(SHORT_DELAY_IN_MS, null, signal);
 
     stack.pop();
     setStackElemArr([...stack.getElements()]);
@@ -96,7 +99,7 @@ export const StackPage = () => {
     stack.clear();
     setStackElemArr([...stack.getElements()]);
 
-    await delay(SHORT_DELAY_IN_MS);
+    await delay(SHORT_DELAY_IN_MS, null, signal);
 
     setIsLoaderClearBtn(false);
   }

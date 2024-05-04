@@ -11,6 +11,9 @@ import styles from './string.module.css';
 
 
 export const StringComponent = () => {
+  const controller = new AbortController();
+  const signal = controller.signal;
+
   const maxLen = 11;
 
   const [steps, setSteps] = useState<string[][] | null>(null);
@@ -51,7 +54,7 @@ export const StringComponent = () => {
     let index = 0;
 
     while (index < newSteps.length - 1) {
-      await delay(DELAY_IN_MS);
+      await delay(DELAY_IN_MS, null, signal);
 
       index++;
       setCurrentStepIndex(index);

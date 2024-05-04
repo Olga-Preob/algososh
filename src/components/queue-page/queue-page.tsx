@@ -7,14 +7,18 @@ import { Circle } from '../ui/circle/circle';
 import { SolutionLayout } from '../ui/solution-layout/solution-layout';
 import { ElementStates } from '../../types/element-states';
 import { Element } from '../../types/index';
-import { delay } from '../string/utils';
+import { delay } from './utils';
 import { Queue } from './Queue';
 import styles from './queue-page.module.css';
 
 
 export const QueuePage = () => {
+  const controller = new AbortController();
+  const signal = controller.signal;
+
   const maxLen = 4;
   const queueSize = 7;
+
   const initArr: Element[] = new Array(queueSize).fill({
     value: '',
     state: ElementStates.Default
@@ -84,7 +88,7 @@ export const QueuePage = () => {
     tempArr[queue.getTail()].state = ElementStates.Changing;
     setQueueElemArr([...tempArr]);
 
-    await delay(SHORT_DELAY_IN_MS);
+    await delay(SHORT_DELAY_IN_MS, null, signal);
 
     queue.enqueue({
       value: values.char,
@@ -113,7 +117,7 @@ export const QueuePage = () => {
     tempArr[queue.getHead()].state = ElementStates.Changing;
     setQueueElemArr([...tempArr]);
 
-    await delay(SHORT_DELAY_IN_MS);
+    await delay(SHORT_DELAY_IN_MS, null, signal);
 
     queue.dequeue();
 
@@ -130,7 +134,7 @@ export const QueuePage = () => {
     queue.clear();
     setQueueElemArr([...fillTempArr()]);
 
-    await delay(SHORT_DELAY_IN_MS);
+    await delay(SHORT_DELAY_IN_MS, null, signal);
     setIsLoaderClearBtn(false);
   }
 

@@ -6,11 +6,14 @@ import { Button } from '../ui/button/button';
 import { Circle } from '../ui/circle/circle';
 import { SolutionLayout } from '../ui/solution-layout/solution-layout';
 import { getFibonacciNumbers } from './getFibonacciNumbers';
-import { delay } from '../string/utils';
+import { delay } from './utils';
 import styles from './fibonacci-page.module.css';
 
 
 export const FibonacciPage = () => {
+  const controller = new AbortController();
+  const signal = controller.signal;
+
   const minNum = 1;
   const maxNum = 19;
 
@@ -47,7 +50,7 @@ export const FibonacciPage = () => {
     const fibonacciNumbers = getFibonacciNumbers(sequenceLength);
 
     for (let i = 0; i < fibonacciNumbers.length; i++) {
-      await delay(SHORT_DELAY_IN_MS);
+      await delay(SHORT_DELAY_IN_MS, null, signal);
 
       setSteps(prev => [...prev, fibonacciNumbers[i]]);
 

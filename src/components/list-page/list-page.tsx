@@ -13,6 +13,9 @@ import styles from './list-page.module.css';
 
 
 export const ListPage = () => {
+  const controller = new AbortController();
+  const signal = controller.signal;
+
   const minLenLinkedList = 5;
   const maxLenLinkedList = 5;
 
@@ -112,13 +115,13 @@ export const ListPage = () => {
     setLinkedListArr([...tempArr]);
     linkedList.prepend(values.char);
 
-    await delay(SHORT_DELAY_IN_MS);
+    await delay(SHORT_DELAY_IN_MS, null, signal);
     tempArr = getArrWithElementStates(linkedList.toArray());
     tempArr[0].state = ElementStates.Modified;
 
     setLinkedListArr([...tempArr]);
 
-    await delay(SHORT_DELAY_IN_MS);
+    await delay(SHORT_DELAY_IN_MS, null, signal);
     tempArr[0].state = ElementStates.Default;
     setLinkedListArr([...tempArr]);
 
@@ -139,7 +142,7 @@ export const ListPage = () => {
 
     setLinkedListArr([...tempArr]);
 
-    await delay(SHORT_DELAY_IN_MS);
+    await delay(SHORT_DELAY_IN_MS, null, signal);
     linkedList.append(values.char);
 
     tempArr = getArrWithElementStates(linkedList.toArray());
@@ -148,7 +151,7 @@ export const ListPage = () => {
     tempArr[lastElement].state = ElementStates.Modified;
     setLinkedListArr([...tempArr]);
 
-    await delay(SHORT_DELAY_IN_MS);
+    await delay(SHORT_DELAY_IN_MS, null, signal);
     tempArr[lastElement].state = ElementStates.Default;
     setLinkedListArr([...tempArr]);
 
@@ -167,7 +170,7 @@ export const ListPage = () => {
 
     setLinkedListArr([...tempArr]);
 
-    await delay(SHORT_DELAY_IN_MS);
+    await delay(SHORT_DELAY_IN_MS, null, signal);
     linkedList.deleteHead();
 
     tempArr = getArrWithElementStates(linkedList.toArray());
@@ -188,7 +191,7 @@ export const ListPage = () => {
 
     setLinkedListArr([...tempArr]);
 
-    await delay(SHORT_DELAY_IN_MS);
+    await delay(SHORT_DELAY_IN_MS, null, signal);
     linkedList.deleteTail();
 
     tempArr = getArrWithElementStates(linkedList.toArray());
@@ -207,7 +210,7 @@ export const ListPage = () => {
     for (let index = 0; index < tempArr.length; index++) {
       if (index > position) return;
 
-      await delay(SHORT_DELAY_IN_MS);
+      await delay(SHORT_DELAY_IN_MS, null, signal);
 
       tempArr[index].headOrTailValue = values.char;
       tempArr[index].hasHead = true;
@@ -220,12 +223,12 @@ export const ListPage = () => {
       if (index === position) {
         linkedList.addByIndex(values.char, Number(values.index));
 
-        await delay(SHORT_DELAY_IN_MS);
+        await delay(SHORT_DELAY_IN_MS, null, signal);
         tempArr = getArrWithElementStates(linkedList.toArray());
         tempArr[position].state = ElementStates.Modified;
         setLinkedListArr([...tempArr]);
 
-        await delay(SHORT_DELAY_IN_MS);
+        await delay(SHORT_DELAY_IN_MS, null, signal);
         tempArr = getArrWithElementStates(linkedList.toArray());
         tempArr[index].state = ElementStates.Default;
         setLinkedListArr([...tempArr]);
@@ -246,20 +249,20 @@ export const ListPage = () => {
     for (let index = 0; index < tempArr.length; index++) {
       if (index > position) return;
 
-      await delay(SHORT_DELAY_IN_MS);
+      await delay(SHORT_DELAY_IN_MS, null, signal);
 
       tempArr[index].state = ElementStates.Changing;
       setLinkedListArr([...tempArr]);
 
       if (index === position) {
-        await delay(SHORT_DELAY_IN_MS);
+        await delay(SHORT_DELAY_IN_MS, null, signal);
         tempArr[index].state = ElementStates.Default;
         tempArr[index].headOrTailValue = tempArr[position].value;
         tempArr[index].hasTail = true;
         tempArr[index].value = '';
         setLinkedListArr([...tempArr]);
 
-        await delay(SHORT_DELAY_IN_MS);
+        await delay(SHORT_DELAY_IN_MS, null, signal);
         linkedList.deleteByIndex(position);
 
         tempArr = getArrWithElementStates(linkedList.toArray());

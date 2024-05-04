@@ -12,6 +12,9 @@ import styles from './sorting-page.module.css';
 
 
 export const SortingPage = () => {
+  const controller = new AbortController();
+  const signal = controller.signal;
+
   const minLen = 3;
   const maxLen = 17;
 
@@ -103,7 +106,7 @@ export const SortingPage = () => {
     let index = 0;
 
     while (index < newSteps.length - 1) {
-      await delay(SHORT_DELAY_IN_MS);
+      await delay(SHORT_DELAY_IN_MS, null, signal);
 
       index++;
       setCurrentStepIndex(index);
