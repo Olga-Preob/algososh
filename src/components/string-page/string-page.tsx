@@ -10,7 +10,7 @@ import { delay, getCharStatus } from './utils';
 import styles from './string.module.css';
 
 
-export const StringComponent = () => {
+export const StringPage = () => {
   const controller = new AbortController();
   const signal = controller.signal;
 
@@ -74,6 +74,8 @@ export const StringComponent = () => {
             isLimitText={true}
             onChange={handleChange}
             disabled={isLoader}
+            data-testid='charInput'
+            data-cy='charInput'
           />
 
           <Button
@@ -81,10 +83,12 @@ export const StringComponent = () => {
             text='Развернуть'
             isLoader={isLoader}
             disabled={!isValid}
+            data-testid='btnSubmit'
+            data-cy='btnSubmit'
           />
         </form>
 
-        <ul className={styles.list}>
+        <ul className={styles.list} data-testid='solutionResult'>
           {
             steps?.[currentStepIndex].map((char, index) => {
               const status = getCharStatus(index, steps, currentStepIndex);

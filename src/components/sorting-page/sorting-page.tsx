@@ -11,7 +11,11 @@ import { bubbleSortWithSteps } from './bubbleSortWithSteps';
 import styles from './sorting-page.module.css';
 
 
-export const SortingPage = () => {
+type Props = {
+  initArr?: number[][];
+}
+
+export const SortingPage = ({ initArr }: Props) => {
   const controller = new AbortController();
   const signal = controller.signal;
 
@@ -21,7 +25,9 @@ export const SortingPage = () => {
   const minNum = 0;
   const maxNum = 101;
 
-  const [steps, setSteps] = useState<number[][]>([getRandomArr(minLen, maxLen, minNum, maxNum)]);
+  const [steps, setSteps] = useState<number[][]>(
+    initArr ? initArr : [getRandomArr(minLen, maxLen, minNum, maxNum)]
+  );
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [allIndexes, setAllIndexes] = useState<{
     aIndex: number | null;
@@ -128,12 +134,14 @@ export const SortingPage = () => {
               value='selection'
               defaultChecked={true}
               disabled={isDisabled}
+              data-testid='radioSelection'
             />
             <RadioInput
               name='typeOfSort'
               label='Пузырёк'
               value='bubble'
               disabled={isDisabled}
+              data-testid='radioBubble'
             />
           </fieldset>
 
@@ -146,6 +154,7 @@ export const SortingPage = () => {
               isLoader={isLoaderASC}
               disabled={isDisabled}
               extraClass={styles.btn}
+              data-testid='btnAsc'
             />
             <Button
               name='descending'
@@ -155,6 +164,7 @@ export const SortingPage = () => {
               isLoader={isLoaderDESC}
               disabled={isDisabled}
               extraClass={styles.btn}
+              data-testid='btnDesc'
             />
           </fieldset>
 
@@ -166,7 +176,7 @@ export const SortingPage = () => {
           />
         </form>
 
-        <ul className={styles.list}>
+        <ul className={styles.list} data-testid='solutionResult'>
           {
             steps?.[currentStepIndex].map((number, index) => {
               const a = allIndexes[currentStepIndex].aIndex;

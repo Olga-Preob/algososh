@@ -71,6 +71,7 @@ export const FibonacciPage = () => {
             isLimitText={true}
             onChange={handleChange}
             disabled={isLoader}
+            data-cy='charInput'
           />
 
           <Button
@@ -78,6 +79,7 @@ export const FibonacciPage = () => {
             type='submit'
             isLoader={isLoader}
             disabled={!isValid}
+            data-cy='btnSubmit'
           />
         </form>
 

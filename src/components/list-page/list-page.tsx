@@ -324,6 +324,7 @@ export const ListPage = () => {
                 isLoaderDeleteByIndexBtn
               }
               extraClass={styles.input}
+              data-cy='charInput'
             />
 
             <Button
@@ -341,6 +342,7 @@ export const ListPage = () => {
                 isLoaderDeleteByIndexBtn
               }
               extraClass={styles.smallBtn}
+              data-cy='btnAddToHead'
             />
 
             <Button
@@ -358,6 +360,7 @@ export const ListPage = () => {
                 isLoaderDeleteByIndexBtn
               }
               extraClass={styles.smallBtn}
+              data-cy='btnAddToTail'
             />
 
             <Button
@@ -375,6 +378,7 @@ export const ListPage = () => {
                 isLoaderDeleteByIndexBtn
               }
               extraClass={styles.smallBtn}
+              data-cy='btnDeleteFromHead'
             />
 
             <Button
@@ -392,6 +396,7 @@ export const ListPage = () => {
                 isLoaderDeleteByIndexBtn
               }
               extraClass={styles.smallBtn}
+              data-cy='btnDeleteFromTail'
             />
           </fieldset>
 
@@ -411,6 +416,7 @@ export const ListPage = () => {
                 isLoaderDeleteByIndexBtn
               }
               extraClass={styles.input}
+              data-cy='indexInput'
             />
 
             <Button
@@ -428,6 +434,7 @@ export const ListPage = () => {
                 isLoaderDeleteByIndexBtn
               }
               extraClass={styles.largeBtn}
+              data-cy='btnAddByIndex'
             />
 
             <Button
@@ -445,6 +452,7 @@ export const ListPage = () => {
                 isLoaderAddByIndexBtn
               }
               extraClass={styles.largeBtn}
+              data-cy='btnDeleteByIndex'
             />
           </fieldset>
         </form>
