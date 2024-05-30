@@ -9,7 +9,7 @@ import { SortingPage } from './sorting-page';
 
 
 describe('Тестирование алгоритмов сортировки выбором и пузырьком', function() {
-  const testInputArr = [[[]], [[34]], [[7, 66, 0, 4]]];
+  const testInputValue = [[[]], [[34]], [[7, 66, 0, 4]]];
 
   const expectedResultsAsc = [[], [34], [0, 4, 7, 66]];
   const expectedResultsDesc = [[], [34], [66, 7, 4, 0]];
@@ -19,7 +19,7 @@ describe('Тестирование алгоритмов сортировки в�
   it('корректно сортирует пустой массив по возрастанию методом сортировки выбором', async () => {
     const { container } = render(
       <Router>
-        <SortingPage initArr={testInputArr[0]} />
+        <SortingPage initArr={testInputValue[0]} />
       </Router>
     );
 
@@ -44,7 +44,7 @@ describe('Тестирование алгоритмов сортировки в�
   it('корректно сортирует пустой массив по убыванию методом сортировки выбором', async () => {
     const { container } = render(
       <Router>
-        <SortingPage initArr={testInputArr[0]} />
+        <SortingPage initArr={testInputValue[0]} />
       </Router>
     );
 
@@ -69,7 +69,7 @@ describe('Тестирование алгоритмов сортировки в�
   it('корректно сортирует пустой массив по возрастанию методом пузырька', async () => {
     const { container } = render(
       <Router>
-        <SortingPage initArr={testInputArr[0]} />
+        <SortingPage initArr={testInputValue[0]} />
       </Router>
     );
 
@@ -94,7 +94,7 @@ describe('Тестирование алгоритмов сортировки в�
   it('корректно сортирует пустой массив по убыванию методом пузырька', async () => {
     const { container } = render(
       <Router>
-        <SortingPage initArr={testInputArr[0]} />
+        <SortingPage initArr={testInputValue[0]} />
       </Router>
     );
 
@@ -119,7 +119,7 @@ describe('Тестирование алгоритмов сортировки в�
   it('корректно сортирует массив из одного элемента по возрастанию методом сортировки выбором', async () => {
     const { container } = render(
       <Router>
-        <SortingPage initArr={testInputArr[1]} />
+        <SortingPage initArr={testInputValue[1]} />
       </Router>
     );
 
@@ -144,7 +144,7 @@ describe('Тестирование алгоритмов сортировки в�
   it('корректно сортирует массив из одного элемента по убыванию методом сортировки выбором', async () => {
     const { container } = render(
       <Router>
-        <SortingPage initArr={testInputArr[1]} />
+        <SortingPage initArr={testInputValue[1]} />
       </Router>
     );
 
@@ -169,7 +169,7 @@ describe('Тестирование алгоритмов сортировки в�
   it('корректно сортирует массив из одного элемента по возрастанию методом пузырька', async () => {
     const { container } = render(
       <Router>
-        <SortingPage initArr={testInputArr[1]} />
+        <SortingPage initArr={testInputValue[1]} />
       </Router>
     );
 
@@ -194,7 +194,7 @@ describe('Тестирование алгоритмов сортировки в�
   it('корректно сортирует массив из одного элемента по убыванию методом пузырька', async () => {
     const { container } = render(
       <Router>
-        <SortingPage initArr={testInputArr[1]} />
+        <SortingPage initArr={testInputValue[1]} />
       </Router>
     );
 
@@ -219,7 +219,7 @@ describe('Тестирование алгоритмов сортировки в�
   it('корректно сортирует массив из нескольких элементов по возрастанию методом сортировки выбором', async () => {
     const { container } = render(
       <Router>
-        <SortingPage initArr={testInputArr[2]} />
+        <SortingPage initArr={testInputValue[2]} />
       </Router>
     );
 
@@ -244,7 +244,7 @@ describe('Тестирование алгоритмов сортировки в�
   it('корректно сортирует массив из нескольких элементов по убыванию методом сортировки выбором', async () => {
     const { container } = render(
       <Router>
-        <SortingPage initArr={testInputArr[2]} />
+        <SortingPage initArr={testInputValue[2]} />
       </Router>
     );
 
@@ -269,7 +269,7 @@ describe('Тестирование алгоритмов сортировки в�
   it('корректно сортирует массив из нескольких элементов по возрастанию методом пузырька', async () => {
     const { container } = render(
       <Router>
-        <SortingPage initArr={testInputArr[2]} />
+        <SortingPage initArr={testInputValue[2]} />
       </Router>
     );
 
@@ -294,7 +294,7 @@ describe('Тестирование алгоритмов сортировки в�
   it('корректно сортирует массив из нескольких элементов по убыванию методом пузырька', async () => {
     const { container } = render(
       <Router>
-        <SortingPage initArr={testInputArr[2]} />
+        <SortingPage initArr={testInputValue[2]} />
       </Router>
     );
 

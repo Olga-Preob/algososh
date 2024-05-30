@@ -1,5 +1,5 @@
-export const inputValue = '[data-cy="inputValue"]';
-export const inputIndex = '[data-cy="inputIndex"]';
+export const charInput = '[data-cy="charInput"]';
+export const indexInput = '[data-cy="indexInput"]';
 
 export const btnSubmit = '[data-cy="btnSubmit"]';
 export const btnAdd = '[data-cy="btnAdd"]';
@@ -13,6 +13,11 @@ export const btnAddByIndex = '[data-cy="btnAddByIndex"]';
 export const btnDeleteFromHead = '[data-cy="btnDeleteFromHead"]';
 export const btnDeleteFromTail = '[data-cy="btnDeleteFromTail"]';
 export const btnDeleteByIndex = '[data-cy="btnDeleteByIndex"]';
+
+export const circleContent = '[class*=circle_content]';
+export const circleDefaultState = '[class*=circle_default]';
+export const circleChangingState = '[class*=circle_changing]';
+export const circleModifiedState = '[class*=circle_modified]';
 
 export const stringPageLink = '[data-cy="stringPageLink"]';
 export const fibonacciPageLink = '[data-cy="fibonacciPageLink"]';

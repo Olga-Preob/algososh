@@ -1,4 +1,9 @@
-import { inputValue, btnSubmit } from './constants/selectors';
+import {
+  charInput,
+  btnSubmit,
+  circleContent,
+  circleDefaultState
+} from './constants/selectors';
 
 
 describe('Тестирование страницы "Последовательность Фибоначчи"', function() {
@@ -12,26 +17,24 @@ describe('Тестирование страницы "Последователь�
   it('если в инпуте пусто, то кнопка добавления недоступна', () => {
     cy.visit(pageUrl);
 
-    cy.get(inputValue).should('be.empty');
-    cy.get(btnSubmit).should('be.disabled');
+    cy.get(btnSubmit).as('btnSubmit');
+    cy.get(charInput).as('charInput');
 
-    cy.get(inputValue).type(testInputValue);
-    cy.get(btnSubmit).should('be.enabled');
-
-    cy.get(inputValue).clear();
-    cy.get(btnSubmit).should('be.disabled');
+    cy.checkButtonState('@charInput', '@btnSubmit');
   });
 
   it('корректно генерирует последовательность чисел Фибоначчи, проверка стилей и анимации', () => {
     cy.visit(pageUrl);
 
-    cy.get(inputValue).type(testInputValue);
-    cy.get(btnSubmit).click();
+    cy.get(btnSubmit).as('btnSubmit');
+    cy.get(charInput).as('charInput');
 
-    cy.wait(waitTime);
+    cy.typeAndClick('@charInput', testInputValue, '@btnSubmit', waitTime);
 
-    cy.get('[class*=circle_content]').should('have.length', testStepsArr.length).each(($el, index) => {
-      cy.wrap($el).children('[class*=circle_default]');
+    cy.get(circleContent).as('circleContent');
+
+    cy.get('@circleContent').should('have.length', testStepsArr.length).each(($el, index) => {
+      cy.wrap($el).children(circleDefaultState);
 
       cy.wrap($el).contains(testStepsArr[index]);
     });

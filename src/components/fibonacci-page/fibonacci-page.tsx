@@ -71,7 +71,7 @@ export const FibonacciPage = () => {
             isLimitText={true}
             onChange={handleChange}
             disabled={isLoader}
-            data-cy='inputValue'
+            data-cy='charInput'
           />
 
           <Button

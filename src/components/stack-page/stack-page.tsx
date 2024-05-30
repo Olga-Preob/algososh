@@ -119,7 +119,7 @@ export const StackPage = () => {
               onChange={handleChange}
               disabled={IsLoaderAddBtn}
               extraClass={styles.input}
-              data-cy='inputValue'
+              data-cy='charInput'
             />
 
             <Button

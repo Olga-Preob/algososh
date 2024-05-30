@@ -1,12 +1,14 @@
 import {
-  inputValue,
-  inputIndex,
+  charInput,
+  indexInput,
   btnAddToHead,
   btnAddToTail,
   btnAddByIndex,
   btnDeleteByIndex,
   btnDeleteFromHead,
-  btnDeleteFromTail
+  btnDeleteFromTail,
+  circleContent,
+  circleDefaultState
 } from './constants/selectors';
 
 
@@ -21,49 +23,50 @@ describe('Тестирование страницы "Связный список
   it('если в инпуте пусто, то кнопки "добавить в head", "добавить в tail", "добавить по индексу" и "удалить по индексу" недоступны', () => {
     cy.visit(pageUrl);
 
-    cy.get(inputValue).should('be.empty');
-    cy.get(inputIndex).should('be.empty');
+    cy.get(charInput).as('charInput').should('be.empty');
+    cy.get(indexInput).as('indexInput').should('be.empty');
 
-    cy.get(btnAddToHead).should('be.disabled');
-    cy.get(btnAddToTail).should('be.disabled');
-    cy.get(btnAddByIndex).should('be.disabled');
-    cy.get(btnDeleteByIndex).should('be.disabled');
+    cy.get(btnAddToHead).as('btnAddToHead').should('be.disabled');
+    cy.get(btnAddToTail).as('btnAddToTail').should('be.disabled');
+    cy.get(btnAddByIndex).as('btnAddByIndex').should('be.disabled');
+    cy.get(btnDeleteByIndex).as('btnDeleteByIndex').should('be.disabled');
 
-    cy.get(inputValue).type(testInputValue[2]);
+    cy.get('@charInput').type(testInputValue[2]);
 
-    cy.get(btnAddToHead).should('be.enabled');
-    cy.get(btnAddToTail).should('be.enabled');
-    cy.get(btnAddByIndex).should('be.disabled');
-    cy.get(btnDeleteByIndex).should('be.disabled');
+    cy.get('@btnAddToHead').should('be.enabled');
+    cy.get('@btnAddToTail').should('be.enabled');
+    cy.get('@btnAddByIndex').should('be.disabled');
+    cy.get('@btnDeleteByIndex').should('be.disabled');
 
-    cy.get(inputIndex).type(testInputIndex[0]);
+    cy.get('@indexInput').type(testInputIndex[0]);
 
-    cy.get(btnAddToHead).should('be.enabled');
-    cy.get(btnAddToTail).should('be.enabled');
-    cy.get(btnAddByIndex).should('be.enabled');
-    cy.get(btnDeleteByIndex).should('be.enabled');
+    cy.get('@btnAddToHead').should('be.enabled');
+    cy.get('@btnAddToTail').should('be.enabled');
+    cy.get('@btnAddByIndex').should('be.enabled');
+    cy.get('@btnDeleteByIndex').should('be.enabled');
 
-    cy.get(inputValue).clear();
+    cy.get('@charInput').clear();
 
-    cy.get(btnAddToHead).should('be.disabled');
-    cy.get(btnAddToTail).should('be.disabled');
-    cy.get(btnAddByIndex).should('be.disabled');
-    cy.get(btnDeleteByIndex).should('be.enabled');
+    cy.get('@btnAddToHead').should('be.disabled');
+    cy.get('@btnAddToTail').should('be.disabled');
+    cy.get('@btnAddByIndex').should('be.disabled');
+    cy.get('@btnDeleteByIndex').should('be.enabled');
 
-    cy.get(inputIndex).clear();
+    cy.get('@indexInput').clear();
 
-    cy.get(btnAddToHead).should('be.disabled');
-    cy.get(btnAddToTail).should('be.disabled');
-    cy.get(btnAddByIndex).should('be.disabled');
-    cy.get(btnDeleteByIndex).should('be.disabled');
+    cy.get('@btnAddToHead').should('be.disabled');
+    cy.get('@btnAddToTail').should('be.disabled');
+    cy.get('@btnAddByIndex').should('be.disabled');
+    cy.get('@btnDeleteByIndex').should('be.disabled');
   });
 
   it('корректно отрисовывает дефолтный список', () => {
     cy.visit(pageUrl);
 
-    cy.get('[class*=circle_content]').should('have.length', 6);
+    cy.get(circleContent).as('circleContent');
+    cy.get('@circleContent').should('have.length', 6);
 
-    cy.get('[class*=circle_content]').each(($el, index, list) => {
+    cy.get('@circleContent').each(($el, index, list) => {
       if (index === 0) {
         cy.wrap($el).contains('head');
         cy.wrap($el).should('not.have.text', 'tail');
@@ -75,7 +78,7 @@ describe('Тестирование страницы "Связный список
         cy.wrap($el).should('not.have.text', 'tail');
       }
 
-      cy.wrap($el).children('[class*=circle_default]');
+      cy.wrap($el).children(circleDefaultState);
       cy.wrap($el).invoke('text').should('have.length.gt', 0);
     });
   });
@@ -83,112 +86,115 @@ describe('Тестирование страницы "Связный список
   it('корректно добавляет элемент в head', () => {
     cy.visit(pageUrl);
 
-    cy.get(inputValue).type(testInputValue[0]);
-    cy.get(btnAddToHead).click();
+    cy.get(charInput).as('charInput');
+    cy.get(btnAddToHead).as('btnAddToHead');
 
-    cy.wait(waitTime);
-    cy.get('[class*=circle_content]').should('have.length', 7);
+    cy.typeAndClick('@charInput', testInputValue[0], '@btnAddToHead', waitTime);
 
-    cy.get('[class*=circle_content]').first().as('firstElement');
+    cy.get(circleContent).as('circleContent');
+    cy.get('@circleContent').should('have.length', 7);
+
+    cy.get('@circleContent').first().as('firstElement');
     cy.get('@firstElement').contains(testInputValue[0]);
   });
 
   it('корректно добавляет элемент в tail', () => {
     cy.visit(pageUrl);
 
-    cy.get(inputValue).type(testInputValue[0]);
-    cy.get(btnAddToTail).click();
+    cy.get(charInput).as('charInput');
+    cy.get(btnAddToTail).as('btnAddToTail');
 
-    cy.wait(waitTime);
-    cy.get('[class*=circle_content]').should('have.length', 7);
+    cy.typeAndClick('@charInput', testInputValue[0], '@btnAddToTail', waitTime);
 
-    cy.get('[class*=circle_content]').last().as('lastElement');
+    cy.get(circleContent).as('circleContent');
+    cy.get('@circleContent').should('have.length', 7);
+
+    cy.get('@circleContent').last().as('lastElement');
     cy.get('@lastElement').contains(testInputValue[0]);
   });
 
   it('корректно добавляет элемент по индексу', () => {
     cy.visit(pageUrl);
 
-    cy.get(inputValue).type(testInputValue[0]);
-    cy.get(inputIndex).type(testInputIndex[0]);
-    cy.get(btnAddByIndex).click();
+    cy.get(charInput).as('charInput').type(testInputValue[0]);
+    cy.get(indexInput).as('indexInput').type(testInputIndex[0]);
+    cy.get(btnAddByIndex).as('btnAddByIndex').click();
 
     cy.wait(waitTime);
-    cy.get('[class*=circle_content]').should('have.length', 7);
 
-    cy.get('[class*=circle_content]').eq(Number(testInputIndex[0])).as('element');
+    cy.get(circleContent).as('circleContent');
+    cy.get('@circleContent').should('have.length', 7);
+
+    cy.get('@circleContent').eq(Number(testInputIndex[0])).as('element');
     cy.get('@element').contains(testInputValue[0]);
   });
 
   it('корректно удаляет элемент из head', () => {
     cy.visit(pageUrl);
 
-    cy.get(inputValue).type(testInputValue[0]);
-    cy.get(btnAddToHead).click();
+    cy.get(charInput).as('charInput');
+    cy.get(btnAddToHead).as('btnAddToHead');
+
+    cy.typeAndClick('@charInput', testInputValue[0], '@btnAddToHead', waitTime);
+    cy.typeAndClick('@charInput', testInputValue[1], '@btnAddToHead', waitTime);
+
+    cy.get(circleContent).as('circleContent');
+    cy.get('@circleContent').should('have.length', 8);
+
+    cy.get(btnDeleteFromHead).as('btnDeleteFromHead').click();
 
     cy.wait(waitTime);
+    cy.get('@circleContent').should('have.length', 7);
 
-    cy.get(inputValue).type(testInputValue[1]);
-    cy.get(btnAddToHead).click();
-
-    cy.wait(waitTime);
-    cy.get('[class*=circle_content]').should('have.length', 8);
-
-    cy.get(btnDeleteFromHead).click();
-
-    cy.wait(waitTime);
-    cy.get('[class*=circle_content]').should('have.length', 7);
-
-    cy.get('[class*=circle_content]').first().as('firstElement');
+    cy.get('@circleContent').first().as('firstElement');
     cy.get('@firstElement').contains(testInputValue[0]);
   });
 
   it('корректно удаляет элемент из tail', () => {
     cy.visit(pageUrl);
 
-    cy.get(inputValue).type(testInputValue[0]);
-    cy.get(btnAddToTail).click();
+    cy.get(charInput).as('charInput');
+    cy.get(btnAddToTail).as('btnAddToTail');
+
+    cy.typeAndClick('@charInput', testInputValue[0], '@btnAddToTail', waitTime);
+    cy.typeAndClick('@charInput', testInputValue[1], '@btnAddToTail', waitTime);
+
+    cy.get(circleContent).as('circleContent');
+    cy.get('@circleContent').should('have.length', 8);
+
+    cy.get(btnDeleteFromTail).as('btnDeleteFromTail').click();
 
     cy.wait(waitTime);
+    cy.get('@circleContent').should('have.length', 7);
 
-    cy.get(inputValue).type(testInputValue[1]);
-    cy.get(btnAddToTail).click();
-
-    cy.wait(waitTime);
-    cy.get('[class*=circle_content]').should('have.length', 8);
-
-    cy.get(btnDeleteFromTail).click();
-
-    cy.wait(waitTime);
-    cy.get('[class*=circle_content]').should('have.length', 7);
-
-    cy.get('[class*=circle_content]').last().as('lastElement');
+    cy.get('@circleContent').last().as('lastElement');
     cy.get('@lastElement').contains(testInputValue[0]);
   });
 
   it('корректно удаляет элемент по индексу', () => {
     cy.visit(pageUrl);
 
-    cy.get(inputValue).type(testInputValue[0]);
-    cy.get(inputIndex).type(testInputIndex[0]);
-    cy.get(btnAddByIndex).click();
+    cy.get(charInput).as('charInput').type(testInputValue[0]);
+    cy.get(indexInput).as('indexInput').type(testInputIndex[0]);
+    cy.get(btnAddByIndex).as('btnAddByIndex').click();
 
     cy.wait(waitTime);
 
-    cy.get(inputValue).type(testInputValue[1]);
-    cy.get(inputIndex).type(testInputIndex[1]);
-    cy.get(btnAddByIndex).click();
+    cy.get('@charInput').type(testInputValue[1]);
+    cy.get('@indexInput').type(testInputIndex[1]);
+    cy.get('@btnAddByIndex').click();
 
     cy.wait(waitTime);
-    cy.get('[class*=circle_content]').should('have.length', 8);
+    cy.get(circleContent).as('circleContent');
+    cy.get('@circleContent').should('have.length', 8);
 
-    cy.get(inputIndex).type(testInputIndex[0]);
-    cy.get(btnDeleteByIndex).click();
+    cy.get('@indexInput').type(testInputIndex[0]);
+    cy.get(btnDeleteByIndex).as('btnDeleteByIndex').click();
 
     cy.wait(waitTime);
-    cy.get('[class*=circle_content]').should('have.length', 7);
+    cy.get('@circleContent').should('have.length', 7);
 
-    cy.get('[class*=circle_content]').eq(Number(testInputIndex[0])).as('element');
+    cy.get('@circleContent').eq(Number(testInputIndex[0])).as('element');
     cy.get('@element').contains(testInputValue[1]);
   });
 });

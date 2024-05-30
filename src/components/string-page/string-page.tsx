@@ -74,8 +74,8 @@ export const StringPage = () => {
             isLimitText={true}
             onChange={handleChange}
             disabled={isLoader}
-            data-testid='inputValue'
-            data-cy='inputValue'
+            data-testid='charInput'
+            data-cy='charInput'
           />
 
           <Button

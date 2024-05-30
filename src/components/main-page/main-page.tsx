@@ -22,22 +22,22 @@ export const MainPage: React.FC<MainPageProps> = ({ extraClass = '' }) => {
         </p>
       </div>
       <div className={styles.cards_box}>
-        <Link className={styles.link} to='/string' data-cy="stringPageLink">
+        <Link className={styles.link} to='/string' data-cy='stringPageLink'>
           <div className={`${styles.card} ${styles.string}`} />
         </Link>
-        <Link className={styles.link} to='/fibonacci' data-cy="fibonacciPageLink">
+        <Link className={styles.link} to='/fibonacci' data-cy='fibonacciPageLink'>
           <div className={`${styles.card} ${styles.fibonacci}`} />
         </Link>
-        <Link className={styles.link} to='/sorting' data-cy="sortingPageLink">
+        <Link className={styles.link} to='/sorting' data-cy='sortingPageLink'>
           <div className={`${styles.card} ${styles.arr}`} />
         </Link>
-        <Link className={styles.link} to='/stack' data-cy="stackPageLink">
+        <Link className={styles.link} to='/stack' data-cy='stackPageLink'>
           <div className={`${styles.card} ${styles.stack}`} />
         </Link>
-        <Link className={styles.link} to='/queue' data-cy="queuePageLink">
+        <Link className={styles.link} to='/queue' data-cy='queuePageLink'>
           <div className={`${styles.card} ${styles.queue}`} />
         </Link>
-        <Link className={styles.link} to='/list' data-cy="listPageLink">
+        <Link className={styles.link} to='/list' data-cy='listPageLink'>
           <div className={`${styles.card} ${styles.list}`} />
         </Link>
       </div>

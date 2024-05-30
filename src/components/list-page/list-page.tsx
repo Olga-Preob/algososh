@@ -324,7 +324,7 @@ export const ListPage = () => {
                 isLoaderDeleteByIndexBtn
               }
               extraClass={styles.input}
-              data-cy='inputValue'
+              data-cy='charInput'
             />
 
             <Button
@@ -416,7 +416,7 @@ export const ListPage = () => {
                 isLoaderDeleteByIndexBtn
               }
               extraClass={styles.input}
-              data-cy='inputIndex'
+              data-cy='indexInput'
             />
 
             <Button

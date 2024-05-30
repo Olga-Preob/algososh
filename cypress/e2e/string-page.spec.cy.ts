@@ -1,4 +1,11 @@
-import { inputValue, btnSubmit } from './constants/selectors';
+import {
+  charInput,
+  btnSubmit,
+  circleContent,
+  circleDefaultState,
+  circleChangingState,
+  circleModifiedState
+} from './constants/selectors';
 
 
 describe('Тестирование страницы "Строка"', function() {
@@ -16,35 +23,35 @@ describe('Тестирование страницы "Строка"', function() 
   it('если в инпуте пусто, то кнопка добавления недоступна', () => {
     cy.visit(pageUrl);
 
-    cy.get(inputValue).should('be.empty');
-    cy.get(btnSubmit).should('be.disabled');
+    cy.get(btnSubmit).as('btnSubmit');
+    cy.get(charInput).as('charInput');
 
-    cy.get(inputValue).type(testInputValue);
-    cy.get(btnSubmit).should('be.enabled');
-
-    cy.get(inputValue).clear();
-    cy.get(btnSubmit).should('be.disabled');
+    cy.checkButtonState('@charInput', '@btnSubmit');
   });
 
   it('разворот строки выполняется корректно, проверка стилей и анимации', () => {
     cy.visit(pageUrl);
 
-    cy.get(inputValue).type(testInputValue);
-    cy.get(btnSubmit).click();
+    cy.get(btnSubmit).as('btnSubmit');
+    cy.get(charInput).as('charInput');
 
-    cy.get('[class*=circle_content]').should('have.length', testInputValue.length).each(($el, index) => {
-      cy.wrap($el).contains(testStepsArr[0][index]);
+    cy.typeAndClick('@charInput', testInputValue, '@btnSubmit');
 
-      cy.wrap($el).children('[class*=circle_default]');
+    cy.get(circleContent).as('circleContent');
+
+    cy.get('@circleContent').should('have.length', testInputValue.length).each(($el, index) => {
+      cy.wrap($el).children(circleDefaultState);
+
+      cy.wrap($el).children(circleDefaultState);
     });
 
     cy.wait(waitTime);
 
-    cy.get('[class*=circle_content]').should('have.length', testInputValue.length).each(($el, index) => {
+    cy.get('@circleContent').each(($el, index) => {
       if (index === 0 || index === testInputValue.length - 1) {
-        cy.wrap($el).children('[class*=circle_changing]');
+        cy.wrap($el).children(circleChangingState);
       } else {
-        cy.wrap($el).children('[class*=circle_default]');
+        cy.wrap($el).children(circleDefaultState);
       }
 
       cy.wrap($el).contains(testStepsArr[0][index]);
@@ -52,11 +59,11 @@ describe('Тестирование страницы "Строка"', function() 
 
     cy.wait(waitTime);
 
-    cy.get('[class*=circle_content]').should('have.length', testInputValue.length).each(($el, index) => {
+    cy.get('@circleContent').each(($el, index) => {
       if (index === 0 || index === testInputValue.length - 1) {
-        cy.wrap($el).children('[class*=circle_modified]');
+        cy.wrap($el).children(circleModifiedState);
       } else {
-        cy.wrap($el).children('[class*=circle_changing]');
+        cy.wrap($el).children(circleChangingState);
       }
 
       cy.wrap($el).contains(testStepsArr[1][index]);
@@ -64,10 +71,10 @@ describe('Тестирование страницы "Строка"', function() 
 
     cy.wait(waitTime);
 
-    cy.get('[class*=circle_content]').should('have.length', testInputValue.length).each(($el, index) => {
-      cy.wrap($el).children('[class*=circle_modified]');
-
+    cy.get('@circleContent').should('have.length', testInputValue.length).each(($el, index) => {
       cy.wrap($el).contains(testStepsArr[2][index]);
+
+      cy.wrap($el).children(circleModifiedState);
     });
   });
 });

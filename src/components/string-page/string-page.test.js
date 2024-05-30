@@ -10,7 +10,7 @@ import { StringPage } from './string-page';
 
 
 describe('Тестирование алгоритма разворота строки', function() {
-  const testInputArr = ['абвг', 'абв', 'я', ''];
+  const testInputValue = ['абвг', 'абв', 'я', ''];
   const expectedResults = ['гвба', 'вба', 'я', ''];
 
   const waitTime = 5000;
@@ -22,17 +22,17 @@ describe('Тестирование алгоритма разворота стр�
       </Router>
     );
 
-    const inputValue = getByTestId(container, 'inputValue');
+    const charInput = getByTestId(container, 'charInput');
     const btnSubmit = getByTestId(container, 'btnSubmit');
     const solutionResult = getByTestId(container, 'solutionResult');
 
-    fireEvent.change(inputValue, {
-      target: { value: testInputArr[0] }
+    fireEvent.change(charInput, {
+      target: { value: testInputValue[0] }
     });
 
     fireEvent.click(btnSubmit);
 
-    await waitFor(() => expect(screen.getByTestId('inputValue')).not.toBeDisabled(), {
+    await waitFor(() => expect(screen.getByTestId('charInput')).not.toBeDisabled(), {
       timeout: waitTime
     });
 
@@ -48,17 +48,17 @@ describe('Тестирование алгоритма разворота стр�
       </Router>
     );
 
-    const inputValue = getByTestId(container, 'inputValue');
+    const charInput = getByTestId(container, 'charInput');
     const btnSubmit = getByTestId(container, 'btnSubmit');
     const solutionResult = getByTestId(container, 'solutionResult');
 
-    fireEvent.change(inputValue, {
-      target: { value: testInputArr[1] }
+    fireEvent.change(charInput, {
+      target: { value: testInputValue[1] }
     });
 
     fireEvent.click(btnSubmit);
 
-    await waitFor(() => expect(screen.getByTestId('inputValue')).not.toBeDisabled(), {
+    await waitFor(() => expect(screen.getByTestId('charInput')).not.toBeDisabled(), {
       timeout: waitTime
     });
 
@@ -74,17 +74,17 @@ describe('Тестирование алгоритма разворота стр�
       </Router>
     );
 
-    const inputValue = getByTestId(container, 'inputValue');
+    const charInput = getByTestId(container, 'charInput');
     const btnSubmit = getByTestId(container, 'btnSubmit');
     const solutionResult = getByTestId(container, 'solutionResult');
 
-    fireEvent.change(inputValue, {
-      target: { value: testInputArr[2] }
+    fireEvent.change(charInput, {
+      target: { value: testInputValue[2] }
     });
 
     fireEvent.click(btnSubmit);
 
-    await waitFor(() => expect(screen.getByTestId('inputValue')).not.toBeDisabled(), {
+    await waitFor(() => expect(screen.getByTestId('charInput')).not.toBeDisabled(), {
       timeout: waitTime
     });
 
@@ -100,17 +100,17 @@ describe('Тестирование алгоритма разворота стр�
       </Router>
     );
 
-    const inputValue = getByTestId(container, 'inputValue');
+    const charInput = getByTestId(container, 'charInput');
     const btnSubmit = getByTestId(container, 'btnSubmit');
     const solutionResult = getByTestId(container, 'solutionResult');
 
-    fireEvent.change(inputValue, {
-      target: { value: testInputArr[3] }
+    fireEvent.change(charInput, {
+      target: { value: testInputValue[3] }
     });
 
     fireEvent.click(btnSubmit);
 
-    await waitFor(() => expect(screen.getByTestId('inputValue')).not.toBeDisabled(), {
+    await waitFor(() => expect(screen.getByTestId('charInput')).not.toBeDisabled(), {
       timeout: waitTime
     });
 
