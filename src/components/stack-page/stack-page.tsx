@@ -119,6 +119,7 @@ export const StackPage = () => {
               onChange={handleChange}
               disabled={IsLoaderAddBtn}
               extraClass={styles.input}
+              data-cy='inputValue'
             />
 
             <Button
@@ -128,6 +129,7 @@ export const StackPage = () => {
               onClick={addElem}
               isLoader={IsLoaderAddBtn}
               disabled={isDisabledAddBtn || IsLoaderRemoveBtn || IsLoaderClearBtn}
+              data-cy='btnAdd'
             />
 
             <Button
@@ -137,6 +139,7 @@ export const StackPage = () => {
               onClick={removeElem}
               isLoader={IsLoaderRemoveBtn}
               disabled={IsLoaderAddBtn || isDisabledBtnRemove || IsLoaderClearBtn}
+              data-cy='btnRemove'
             />
           </fieldset>
 
@@ -147,6 +150,7 @@ export const StackPage = () => {
             onClick={clearStack}
             isLoader={IsLoaderClearBtn}
             disabled={IsLoaderAddBtn || isDisabledClearBtn || IsLoaderRemoveBtn}
+            data-cy='btnClear'
           />
         </form>
 

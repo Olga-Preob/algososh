@@ -24,16 +24,20 @@ export const delay = (ms: number = 0, value: string | null, signal: AbortSignal)
 export const getCharStatus = (index: number, steps: string[][], currentStepIndex: number) => {
   const maxIndex = steps[currentStepIndex].length - 1;
 
+  if (currentStepIndex === 0) return ElementStates.Default;
+
+  if ((currentStepIndex - 1) * 2 > maxIndex) return ElementStates.Modified;
+
+  if (index === currentStepIndex - 1 || index === maxIndex - currentStepIndex + 1) {
+    return ElementStates.Changing;
+  }
+
   if (
     (index < currentStepIndex) ||
     (index > maxIndex - currentStepIndex) ||
-    (currentStepIndex === steps.length - 1)
+    (currentStepIndex === steps.length)
   ) {
     return ElementStates.Modified;
-  }
-
-  if (index === currentStepIndex || index === maxIndex - currentStepIndex) {
-    return ElementStates.Changing;
   }
 
   return ElementStates.Default;

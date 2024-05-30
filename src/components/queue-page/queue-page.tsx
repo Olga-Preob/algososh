@@ -153,6 +153,7 @@ export const QueuePage = () => {
               onChange={handleChange}
               disabled={IsLoaderAddBtn}
               extraClass={styles.input}
+              data-cy='inputValue'
             />
 
             <Button
@@ -162,6 +163,7 @@ export const QueuePage = () => {
               onClick={addElem}
               isLoader={IsLoaderAddBtn}
               disabled={isDisabledAddBtn || IsLoaderRemoveBtn || IsLoaderClearBtn}
+              data-cy='btnAdd'
             />
 
             <Button
@@ -171,6 +173,7 @@ export const QueuePage = () => {
               onClick={removeElem}
               isLoader={IsLoaderRemoveBtn}
               disabled={IsLoaderAddBtn || isDisabledBtnRemove || IsLoaderClearBtn}
+              data-cy='btnRemove'
             />
           </fieldset>
 
@@ -181,6 +184,7 @@ export const QueuePage = () => {
             onClick={clearQueue}
             isLoader={IsLoaderClearBtn}
             disabled={IsLoaderAddBtn || isDisabledClearBtn || IsLoaderRemoveBtn}
+            data-cy='btnClear'
           />
         </form>
 

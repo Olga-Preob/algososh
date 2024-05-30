@@ -3,7 +3,11 @@ export function reverseStringWithSteps(input: string): string[][] {
   const letters = input.split('');
   const steps: string[][] = [[...letters]];
 
+  steps.push([...letters]);
+
   if (input.length <= 1) {
+    steps.push([...letters]);
+
     return steps;
   }
 
@@ -14,6 +18,8 @@ export function reverseStringWithSteps(input: string): string[][] {
 
     steps.push([...letters]);
   }
+
+  steps.push([...letters]);
 
   return steps;
 }
